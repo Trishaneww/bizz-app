@@ -1,12 +1,12 @@
 # Mini Business Listing & Discovery
 
 A small slice of a "Business Listing & Discovery" feature for Canadian small
-business owners. You can **create a business listing**, **browse all listings**,
-and **search them by name**.
+business owners. You can create a business listing, browse all listings,
+and search them by name.
 
-Built with **React Native (Expo)** + **TypeScript**, styled with **NativeWind**
-(Tailwind for RN), with listings persisted locally via **AsyncStorage** and
-state managed with **TanStack Query**.
+Built with React Native (Expo) + TypeScript, styled with NativeWind
+(Tailwind for RN), with listings persisted locally via AsyncStorage and
+state managed with TanStack Query.
 
 ---
 
@@ -31,7 +31,7 @@ npm install
 npm start        
 ```
 
-Then **scan the QR code** with Expo Go (Android) or the Camera app (iOS). The app
+Then scan the QR code with Expo Go (Android) or the Camera app (iOS). The app
 opens on your device.
 
 Prefer a simulator? Press `i` (iOS Simulator) or `a` (Android Emulator) in the
@@ -43,22 +43,22 @@ Type safety can be checked with `npm run typecheck`.
 
 ## Decisions I made
 
-- **Expo + TypeScript** was the quickest way to get something running on a real
+- Expo + TypeScript was the quickest way to get something running on a real
   phone via Expo Go, while still having proper type safety.
-- **AsyncStorage over in-memory** because persistence across app restarts is a
+- AsyncStorage over in-memory because persistence across app restarts is a
   noticeably better experience and only took about 20 extra minutes. All the
   storage logic lives in `src/libs/listings.ts`, so swapping in a real API later
   is a one-file change.
-- **TanStack Query even without a real backend** because AsyncStorage is async
+- TanStack Query even without a real backend because AsyncStorage is async
   and it felt natural to treat it like a data source. The main win is cache
   invalidation: after you create a listing, it shows up on the list screen
   immediately without any manual state wrangling between screens.
-- **Preset categories instead of free text** to keep the data clean and make
+- Preset categories instead of free text** to keep the data clean and make
   each listing easier to scan at a glance.
-- **Logic out of the screens** so the screens just describe the UI. Form state
+- Logic out of the screens so the screens just describe the UI. Form state
   lives in `useListingForm`, search in `useListingSearch`, and pure helpers like
   filtering and formatting are in `libs/`.
-- **Minimal validation** as per the spec, just name and category are required,
+- Minimal validation as per the spec, just name and category are required,
   description is optional.
 
 ## Trade-offs I made due to time
