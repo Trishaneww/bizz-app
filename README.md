@@ -10,6 +10,22 @@ state managed with **TanStack Query**.
 
 ---
 
+## Screenshots
+
+**Browse & search**
+
+| All listings | Search by name | No matches | Empty state |
+|:--:|:--:|:--:|:--:|
+| <img src="assets/demo-1.png" width="200"/> | <img src="assets/demo-2.png" width="200"/> | <img src="assets/demo-3.png" width="200"/> | <img src="assets/demo-4.png" width="200"/> |
+
+**Create a listing**
+
+| Add business | Inline validation | Category picker |
+|:--:|:--:|:--:|
+| <img src="assets/demo-5.png" width="200"/> | <img src="assets/demo-6.png" width="200"/> | <img src="assets/demo-7.png" width="200"/> |
+
+---
+
 ## How to run the app
 
 > Requires Node 18+ and the **Expo Go** app on your phone (App Store / Play Store).
