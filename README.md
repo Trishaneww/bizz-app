@@ -1,4 +1,4 @@
-# Local Businesses — Mini Business Listing & Discovery
+# Mini Business Listing & Discovery
 
 A small slice of a "Business Listing & Discovery" feature for Canadian small
 business owners. You can **create a business listing**, **browse all listings**,
@@ -15,8 +15,8 @@ state managed with **TanStack Query**.
 > Requires Node 18+ and the **Expo Go** app on your phone (App Store / Play Store).
 
 ```bash
-npm install      # if dependencies aren't installed yet
-npm start        # starts the Metro dev server and prints a QR code
+npm install     
+npm start        
 ```
 
 Then **scan the QR code** with Expo Go (Android) or the Camera app (iOS). The app
@@ -29,67 +29,41 @@ Type safety can be checked with `npm run typecheck`.
 
 ---
 
-## What the app does
-
-| Screen | What it does |
-| --- | --- |
-| **Local Businesses** (list) | Scrollable list of all listings (name, category, description), a search bar that filters by business name, and a friendly empty state. A floating **Add business** button opens the create screen. |
-| **Add Business** (form) | Inputs for business name, category (preset dropdown), and a multi-line description. Saving persists the listing and returns to the list, where it appears immediately. |
-
----
-
-## Project structure
-
-The guiding rule: **components stay declarative** — all logic lives in `hooks/`
-(state) or `libs/` (pure helpers + persistence).
-
-```
-App.tsx                 # Providers: QueryClient + SafeArea, mounts the navigator
-src/
-  navigation/           # Two-screen native-stack + typed route params
-  screens/              # ListingsScreen, CreateListingScreen (composition only)
-  components/            # ListingCard, SearchBar, CategoryPicker, FormField, …
-  hooks/                # useListings, useCreateListing, useListingForm, useListingSearch
-  libs/                 # listings (AsyncStorage data layer), filter, format, categories, id
-  types/                # Listing domain model
-```
-
----
-
 ## Decisions I made
 
-- **Expo + TypeScript.** Fastest path to a real iOS/Android app that runs on a
-  physical phone via Expo Go, with type safety throughout.
-- **AsyncStorage over in-memory.** The spec allowed either; persistence across
-  app restarts is a meaningfully better experience for ~20 minutes of extra
-  work. All storage access is isolated in `src/libs/listings.ts`, so swapping in
-  a real API later would touch only that one file.
-- **TanStack Query, even without a backend.** AsyncStorage access is async, so
-  treating it as a data source gives loading/error states and — most usefully —
-  automatic cache invalidation: after a listing is created, the mutation
-  invalidates the list query so the new business shows up immediately, with no
-  manual cross-screen state passing.
-- **Preset category dropdown.** Keeps the data clean and lets each listing show a
-  consistent, colour-coded category chip — a small touch that makes the list
-  easier to scan.
-- **Logic out of components.** Form state lives in `useListingForm`, search in
-  `useListingSearch`, and pure helpers (filtering, formatting) in `libs/`, so
-  the screens read as a description of the UI.
-- **Light validation only.** Per the spec, just the essentials: name and
-  category are required; description is optional.
+- **Expo + TypeScript** was the quickest way to get something running on a real
+  phone via Expo Go, while still having proper type safety.
+- **AsyncStorage over in-memory** because persistence across app restarts is a
+  noticeably better experience and only took about 20 extra minutes. All the
+  storage logic lives in `src/libs/listings.ts`, so swapping in a real API later
+  is a one-file change.
+- **TanStack Query even without a real backend** because AsyncStorage is async
+  and it felt natural to treat it like a data source. The main win is cache
+  invalidation: after you create a listing, it shows up on the list screen
+  immediately without any manual state wrangling between screens.
+- **Preset categories instead of free text** to keep the data clean and make
+  each listing easier to scan at a glance.
+- **Logic out of the screens** so the screens just describe the UI. Form state
+  lives in `useListingForm`, search in `useListingSearch`, and pure helpers like
+  filtering and formatting are in `libs/`.
+- **Minimal validation** as per the spec, just name and category are required,
+  description is optional.
 
-## Trade-offs I accepted due to time
+## Trade-offs I made due to time
 
-- **No edit/delete.** Create + read + search only, to stay within the MVP scope.
-- **No automated tests.** The pure helpers (`filterListingsByName`,
-  `useListingForm` validation) were written to be easily testable, but I
-  prioritised a working, polished feature over writing the tests.
-- **Search is name-only and client-side.** Matches the spec; fine at this scale.
-- **No accessibility/i18n pass** beyond sensible defaults.
+- No edit or delete, just create, browse and search to keep it within MVP scope.
+- No automated tests. The pure helpers were written to be easy to test, but I
+  prioritised getting a working, polished feature over writing the tests.
+- Search is name-only and client-side, which matches the spec and is fine at
+  this scale.
 
-## What I'd do in v2
+## What I'd do next
 
-- **Edit & delete listings**, with optimistic updates via TanStack Query.
-- **Richer discovery**: filter by category chip and search across
-  description/category, not just name (plus images and location for a Canadian
-  local-business directory).
+- Move storage to a proper database like Postgres. Right now everything lives in
+  AsyncStorage on the device, which works for a demo but wouldn't scale or allow
+  data to be shared across users.
+- Add edit and delete with optimistic updates via TanStack Query.
+- Richer search and filtering, searching across description and category, not
+  just name, plus filtering by category chip.
+- Images and location data would make a lot of sense for a Canadian local
+  business directory.
